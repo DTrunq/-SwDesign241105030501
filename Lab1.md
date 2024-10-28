@@ -1,4 +1,4 @@
-1. Phân tích kiến trúc
+1. Phân tích kiến trúc:
 Dựa trên yêu cầu, chúng ta sẽ áp dụng kiến trúc Three-Tier Architecture với các lớp chính:
 Application Layer: Giao diện desktop Windows cho nhân viên để nhập thông tin chấm công, tạo đơn mua hàng, chọn phương thức thanh toán, và xem báo cáo.
 Business Services Layer: Xử lý logic nghiệp vụ, bao gồm tính toán lương, xử lý chấm công, và quản lý đơn hàng.

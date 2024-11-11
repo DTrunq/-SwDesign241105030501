@@ -19,89 +19,150 @@ Ca sử dụng **Create Administrative Report** cho phép **Payroll Administrato
 ## 3. Biểu đồ tuần tự
 Biểu đồ tuần tự minh họa luồng tương tác giữa các lớp khi Payroll Administrator yêu cầu tạo và lưu báo cáo quản trị.
 ![](https://www.planttext.com/api/plantuml/png/Z9HDRi8m48NtFiM85KZq0YmgeY1LxA947C2D1x3asAbja7AsBdgaNg7-YObfWsWMLZJppPkPvoZVdrzROwcsbquGsbgbeQA3La8KhEEI6wkf3r83LK5w1_AMzrHQMDJOAsrh_BYWiOVzmZE7_HnJAccz9Ee0rUKSrA2-yXOZqSmHCKL8LS3BgskrWR4vM0MjHceHT239OU-HgfYGc70OjwWvXQKTUbm32qLKdjmxThrG0-8gwr1fTUKCVvUF3Ufo0mrAzYTTbo7TpAVXw1mTOoUKw2pcIfAw2KKRU8knMzTtQf21afb-ag_HNhHCAfXQ9QtoHgHuENcNnSD4Z9jUq24pRnSZgPXGOLqSshDI1esttT0hWZtVZ0VtpDvF0CTcIqaxvxTGRLXy5Qf-EPhpEie4B7CsLqnQQ_3QKN7q8A7Jb66U7bj-vCwnL9hNk2dSHtlakWifKCTKwkTYsIH-pQVevEY8tYCe37hNt0MqL3FpsD1T9FBavDjzye5hCmfFTnxd-k_Uz_Z3tIVCtJVPkiF_Wtu0003__mC0)
-c) Biểu đồ lớp phân tích
-![](https://www.planttext.com/api/plantuml/png/h5HBJiCm4Dtd55usgBr0XAgY5aIbgggW2B4SaY6O9dOOEvKYnCbOS2IkW5t7WJYqAx98DCypRtxF-Vhud2aDfEkoYDIE2qPIOPGMe1Ixo4ekRh2IfE-Mx2rYzibH8856XuzYXohOUwIGAMWkHS9kDN6Hnz5xD2ISIw595WMI9oPyhL7fbYKbhf4u9AprR-rXFZfylD-OdSZlN7uIMclRLEXTMsuxZuLfCM7sxK0KMGXbe4rvAwxqkGkVzYVaPvEZPOFHe13VqpyKr35lIBvWslLOENEPzHbRU0rbaChKEdy6od5Tbuz8QXG77NQ9Bikga0sYpuIj7QRIKaDnBMjIzv9sQ4wl2WdQ7Ux1xMe1ZKhOKhImukbkXMR50NxWsa3pW41RwTh_nHP8SpZESJZASN-CiLUHRREl_ibaUaI-YLUkYlvsiA6jyX9MWe0SJxdw3LfUKpNkKHsaTYAasyKW9X1QhnH_nTYJfD3nR38vscwjJFtHp4pE_ZI-0G00__y30000)
-# Phân tích ca sử dụng Create Employee Report. 
-1. Mô tả ngắn gọn
+## 4. Hành vi của từng lớp
 
+### Payroll Administrator (PA)
+- Yêu cầu hệ thống tạo báo cáo.
+- Cung cấp các tiêu chí như loại báo cáo, ngày bắt đầu/kết thúc, tên nhân viên.
+- Quyết định lưu hoặc không lưu báo cáo.
+
+### ReportRequestUI (UI)
+- Hiển thị biểu mẫu để PA nhập tiêu chí.
+- Gửi tiêu chí đến `ReportController`.
+- Hiển thị báo cáo và yêu cầu thông tin lưu trữ từ PA nếu cần.
+
+### ReportController (RC)
+- Gửi tiêu chí đến `ReportService` để tạo báo cáo.
+- Trả báo cáo về cho UI để hiển thị.
+- Xử lý yêu cầu lưu báo cáo từ UI.
+
+### ReportService (RS)
+- Tạo báo cáo dựa trên tiêu chí đã nhận.
+- Lưu báo cáo nếu có yêu cầu.
+
+### Report (R)
+- Tạo báo cáo dựa trên tiêu chí.
+- Trả kết quả lại cho `ReportService`.
+
+---
+
+## 5. Biểu đồ lớp
+
+### Các lớp phân tích và nhiệm vụ:
+
+#### AdminReportUI
+- **Nhiệm vụ**: Lớp giao diện cho người dùng nhập tiêu chí và lưu báo cáo.
+
+#### AdminReportController
+- **Nhiệm vụ**: Xử lý logic tạo báo cáo và lưu trữ.
+
+#### Report
+- **Nhiệm vụ**: Tạo báo cáo dựa trên các tiêu chí đã nhận.
+
+#### ReportCriteria
+- **Nhiệm vụ**: Lớp này lưu trữ các tiêu chí tạo báo cáo, chẳng hạn như loại báo cáo, ngày bắt đầu và kết thúc.
+
+#### Project
+- **Nhiệm vụ**: Quản lý mã dự án và các thông tin liên quan.
+
+#### Employee
+- **Nhiệm vụ**: Quản lý thông tin nhân viên và tạo báo cáo liên quan đến nhân viên.
+
+---
+
+### Quan hệ giữa các lớp:
+
+1. `AdminReportUI` tương tác với `AdminReportController` để gửi yêu cầu tạo báo cáo.
+2. `AdminReportController` lấy dữ liệu từ `Report`, `Project`, và `Employee` để tạo báo cáo dựa trên `ReportCriteria`.
+
+## Biểu đồ lớp phân tích
+![](https://www.planttext.com/api/plantuml/png/X9EnJiCm48PtFyLjj58hCNT0hGf2I0X1WGTmtLDYIEpWs4W5CQ0EdPcP2ggGAY74IWQ6y29v0bu19t5AAQLai7MMVtzt_rq-a_TshAdI9Wn8VCv5H1KDWGKqZZjQAzut6lUO5CVy2c6Ja0tefXC6GPRSH-1nAc70isGiI261pY3aeeUHLFfq3wu9v9-70XNLM9xNwkLfJ2-haq0oghaKBJYsIE7LoSqIwUFEKcuDdFjs7wsWTQNGIWO1geggyC9Wh1s2AQvHSTe2Tz_5lvDHnLRTQy3_oMa_IrvPiOrSPgLusO2gT0_rDjMqLZorAAYoSi9ccSl9CC8oBbfbfIv4CIY2-Ik7IfuXM-3gha-LXmScxAEA5u4xOHJ88U8VJVecLtKtO4vlGRusmF7BqFboPAW0wyJOJaUMl51WSwF8p-beDhTMTx05krdop66OpWomxEt9aDMTpb_ekNRjPs_J8Gmi4e9y8jTfd4sLA4mVS-4hf1EnHbKvje85mayV15poT2R8KYiNa-mQuUKLJUtGyA8wFtqcf6sDp7_0Bm000F__0m00)
+# Phân tích ca sử dụng: Create Employee Report
+
+## 1. Mô tả ngắn gọn
 Nhân viên có thể tạo các loại báo cáo như "Tổng giờ làm việc," "Tổng giờ làm việc cho một dự án," "Nghỉ phép/Bệnh," hoặc "Tổng lương đến hiện tại trong năm." Báo cáo này có thể được lưu lại nếu nhân viên yêu cầu.
-2. Các Lớp Phân Tích
-  - Boundary Class: ReportUI
-  - Control Class: ReportController
-  - Entity Class: Report
-  - Entity Class: Project
-3. Biểu đồ tuần tự
-![](https://www.planttext.com/api/plantuml/png/Z5JDZjCm4BxxAKOzB-BU0rffGS0540LndjeJhNSTJnXFYl9i77WaNW4xZTjGqf8UglnyFpFVZFFxvw_xf2ZQjy6aPnz1E951gopmfkq23qHcptrqA0Dyfev5lxutbgCAX-d1m_4ka1YAwhK2wzqduIUoQanLX1UlJbfRs9K2OFCWX4edrmcmCHLOIFNbjcYsdKAJwvGH05QyadYyuf891--eedNew0x6ti5btpkWwCOhWq4dteW2ds3pXHK3lEDU4dnZUIOtMcFjRMCW_-QbNaQppK--zvGKy80-u3uGT4SoM7QKPWfdLb6QB8g0YgV34c_2N3FMNk9AjtDYhttg0WuBl2jpf51WS_YAL7ObzpHISwX_aVCRiu9yEV_hNMtXBKMIicOJAGySOOyfMtEybBYPvapWXkCynxfvV3vPoq5-xDJdQZ8muQ6MEgxb2MyVEH_KL37_vBnuK1gVTovYIu0vji0MYy-DYTOpSuEuRkLdVS0Fhu-ZsCi5eUMfxMRqSMAbxOwiRpmjrhDSJRvklBHLgHJbLfo33wo-6SuHSGEfjvPIQlfmZ9z2cdsv7EV9HDR_ZMOIhetvP55SBgdi_Nt-An_bFm000F__0m00)
-4. Nhiệm vụ của từng lớp
 
-Employee (Nhân viên)
-  - Tương tác với giao diện người dùng để khởi tạo yêu cầu tạo báo cáo, cung cấp các tiêu chí cho báo cáo, và chọn lưu báo cáo nếu cần.
+## 2. Các lớp phân tích:
+- **Boundary Class**: `ReportUI`
+- **Control Class**: `ReportController`
+- **Entity Class**: `Report`
+- **Entity Class**: `Project`
 
-ReportUI (Lớp giao diện người dùng)
-  - Thu thập thông tin tiêu chí báo cáo từ nhân viên, bao gồm loại báo cáo, ngày bắt đầu, ngày kết thúc và mã dự án (nếu cần).
-  - Hiển thị báo cáo cho nhân viên và cung cấp tùy chọn lưu báo cáo.
-  - Xác nhận tên và vị trí lưu báo cáo khi nhân viên chọn lưu.
+## 3. Biểu đồ tuần tự
+![Biểu đồ tuần tự](https://www.planttext.com/api/plantuml/png/Z5JDZjCm4BxxAKOzB-BU0rffGS0540LndjeJhNSTJnXFYl9i77WaNW4xZTjGqf8UglnyFpFVZFFxvw_xf2ZQjy6aPnz1E951gopmfkq23qHcptrqA0Dyfev5lxutbgCAX-d1m_4ka1YAwhK2wzqduIUoQanLX1UlJbfRs9K2OFCWX4edrmcmCHLOIFNbjcYsdKAJwvGH05QyadYyuf891--eedNew0x6ti5btpkWwCOhWq4dteW2ds3pXHK3lEDU4dnZUIOtMcFjRMCW_-QbNaQppK--zvGKy80-u3uGT4SoM7QKPWfdLb6QB8g0YgV34c_2N3FMNk9AjtDYhttg0WuBl2jpf51WS_YAL7ObzpHISwX_aVCRiu9yEV_hNMtXBKMIicOJAGySOOyfMtEybBYPvapWXkCynxfvV3vPoq5-xDJdQZ8muQ6MEgxb2MyVEH_KL37_vBnuK1gVTovYIu0vji0MYy-DYTOpSuEuRkLdVS0Fhu-ZsCi5eUMfxMRqSMAbxOwiRpmjrhDSJRvklBHLgHJbLfo33wo-6SuHSGEfjvPIQlfmZ9z2cdsv7EV9HDR_ZMOIhetvP55SBgdi_Nt-An_bFm000F__0m00)
 
-ReportController (Lớp xử lý)
-  - Xử lý và điều phối quy trình tạo báo cáo.
-  - Gửi yêu cầu đến lớp Project để lấy danh sách mã dự án nếu loại báo cáo cần mã dự án.
-  - Gửi yêu cầu đến lớp Report để tạo báo cáo dựa trên tiêu chí được cung cấp và lưu trữ báo cáo nếu nhân viên chọn lưu.
+## 4. Nhiệm vụ của từng lớp
 
-Project (Lớp thực thể dự án)
-  - Cung cấp danh sách mã dự án từ Cơ sở Dữ liệu Quản lý Dự án, để hỗ trợ việc tạo báo cáo "Total Hours Worked for a Project".
+### Employee (Nhân viên)
+- Tương tác với giao diện người dùng để khởi tạo yêu cầu tạo báo cáo, cung cấp các tiêu chí cho báo cáo, và chọn lưu báo cáo nếu cần.
 
-Report (Lớp thực thể báo cáo)
-  - Tạo dữ liệu báo cáo dựa trên tiêu chí được cung cấp từ ReportController.
-  - Lưu báo cáo đến tên và vị trí được chỉ định khi ReportController yêu cầu lưu.
-5. Biểu đồ lớp
+### ReportUI (Lớp giao diện người dùng)
+- Thu thập thông tin tiêu chí báo cáo từ nhân viên, bao gồm loại báo cáo, ngày bắt đầu, ngày kết thúc và mã dự án (nếu cần).
+- Hiển thị báo cáo cho nhân viên và cung cấp tùy chọn lưu báo cáo.
+- Xác nhận tên và vị trí lưu báo cáo khi nhân viên chọn lưu.
 
-a) Các lớp phân tích và nhiệm vụ của từng lớp
-Employee
-  - Nhiệm vụ: Lớp này đại diện cho nhân viên, cho phép truy xuất và quản lý thông tin về nhân viên.
-  - Thuộc tính:
-    + employeeID
-    + name
-    + position
-Phương thức:
-  - getEmployeeInfo(): Lấy thông tin nhân viên cho báo cáo.
+### ReportController (Lớp điều phối)
+- Xử lý và điều phối quy trình tạo báo cáo.
+- Gửi yêu cầu đến lớp Project để lấy danh sách mã dự án nếu loại báo cáo cần mã dự án.
+- Gửi yêu cầu đến lớp Report để tạo báo cáo dựa trên tiêu chí được cung cấp và lưu trữ báo cáo nếu nhân viên chọn lưu.
 
-ReportGenerator
-  - Nhiệm vụ: Xử lý yêu cầu từ người dùng để tạo các loại báo cáo khác nhau.
-  - Thuộc tính:
-    + reportType
-    + startDate
-    + endDate
-  - Phương thức:
-    + generateReport(): Tạo báo cáo dựa trên tiêu chí được cung cấp.
-    + selectChargeNumber(): Lựa chọn mã phí cho báo cáo dự án cụ thể.
+### Project (Lớp thực thể dự án)
+- Cung cấp danh sách mã dự án từ Cơ sở Dữ liệu Quản lý Dự án, để hỗ trợ việc tạo báo cáo "Total Hours Worked for a Project".
 
-EmployeeReportUI
-  - Nhiệm vụ: Giao diện cho phép người dùng chọn loại báo cáo, nhập tiêu chí, và yêu cầu lưu báo cáo.
-  - Thuộc tính:
-    + selectedReportType
-    + inputCriteria
-  - Phương thức:
-    + displayReportOptions(): Hiển thị các lựa chọn loại báo cáo.
-    + enterCriteria(): Yêu cầu người dùng nhập tiêu chí báo cáo.
-    + displayReport(): Hiển thị báo cáo đã tạo cho người dùng.
+### Report (Lớp thực thể báo cáo)
+- Tạo dữ liệu báo cáo dựa trên tiêu chí được cung cấp từ ReportController.
+- Lưu báo cáo đến tên và vị trí được chỉ định khi ReportController yêu cầu lưu.
 
-FileManager
-  - Nhiệm vụ: Xử lý lưu trữ và xóa các báo cáo đã tạo.
-  - Thuộc tính:
-    + fileName
-    + filePath
-  - Phương thức:
-    + saveReport(): Lưu báo cáo vào hệ thống.
-    + discardReport(): Xóa báo cáo không lưu.
+## 5. Biểu đồ lớp
 
-b) Quan hệ giữa các lớp
-  - EmployeeReportUI tương tác với ReportGenerator để yêu cầu tạo báo cáo và lấy thông tin liên quan từ Employee.
-  - ReportGenerator có thể yêu cầu Employee cung cấp thông tin nhân viên nếu cần thiết cho báo cáo.
-  - ReportGenerator sau khi tạo báo cáo sẽ gửi kết quả tới EmployeeReportUI để hiển thị.
-  - FileManager được EmployeeReportUI sử dụng để lưu hoặc xóa báo cáo sau khi người dùng xác nhận.
+### a) Các lớp phân tích và nhiệm vụ của từng lớp
 
-c) Biểu đồ lớp
-![](https://www.planttext.com/api/plantuml/png/T5BBJiCm4BpxAto4GyGz1rIf1PG31HNuW2NP9XQ9RRoReWZnPHpu97u1Eo-eKtA8el7EpcGytvzVAs9mt3Qre1UbfJE48g-1I5urjZOTedmNqZ-9n178DgbKcaTKGuEfV62dT3b2rf1YPVGHB6M9FEtCzDwSdQVoO5GXFiIek4Dh7D-WHWTit2piUlonix5Gxtq3xF7mddpg8iA2ThyK1ubPUZWah37dTGMkn6tRFADRUfkS3mkUijdSGCPYzvz9fMtBQwSOdO8eaaAHhQ4Rk7SsX4QHETIUED6ZioFwqlErgl4MD9Juc-NUOzlbbGNu7hYA_14SJaVcbNDmnL9vaLEIN2ukjk-F_ywPv9lYIiG3WJJtB_K5U6sH_70132U7__vgsjkcYz4ZZVqHOkMR4Ph-0m00__y30000)
+#### Employee
+- Nhiệm vụ: Lớp này đại diện cho nhân viên, cho phép truy xuất và quản lý thông tin về nhân viên.
+- Thuộc tính:
+  - `employeeID`
+  - `name`
+  - `position`
+- Phương thức:
+  - `getEmployeeInfo()`: Lấy thông tin nhân viên cho báo cáo.
+
+#### ReportGenerator
+- Nhiệm vụ: Xử lý yêu cầu từ người dùng để tạo các loại báo cáo khác nhau.
+- Thuộc tính:
+  - `reportType`
+  - `startDate`
+  - `endDate`
+- Phương thức:
+  - `generateReport()`: Tạo báo cáo dựa trên tiêu chí được cung cấp.
+  - `selectChargeNumber()`: Lựa chọn mã phí cho báo cáo dự án cụ thể.
+
+#### EmployeeReportUI
+- Nhiệm vụ: Giao diện cho phép người dùng chọn loại báo cáo, nhập tiêu chí, và yêu cầu lưu báo cáo.
+- Thuộc tính:
+  - `selectedReportType`
+  - `inputCriteria`
+- Phương thức:
+  - `displayReportOptions()`: Hiển thị các lựa chọn loại báo cáo.
+  - `enterCriteria()`: Yêu cầu người dùng nhập tiêu chí báo cáo.
+  - `displayReport()`: Hiển thị báo cáo đã tạo cho người dùng.
+
+#### FileManager
+- Nhiệm vụ: Xử lý lưu trữ và xóa các báo cáo đã tạo.
+- Thuộc tính:
+  - `fileName`
+  - `filePath`
+- Phương thức:
+  - `saveReport()`: Lưu báo cáo vào hệ thống.
+  - `discardReport()`: Xóa báo cáo không lưu.
+
+### b) Quan hệ giữa các lớp
+- `EmployeeReportUI` tương tác với `ReportGenerator` để yêu cầu tạo báo cáo và lấy thông tin liên quan từ `Employee`.
+- `ReportGenerator` có thể yêu cầu `Employee` cung cấp thông tin nhân viên nếu cần thiết cho báo cáo.
+- `ReportGenerator` sau khi tạo báo cáo sẽ gửi kết quả tới `EmployeeReportUI` để hiển thị.
+- `FileManager` được `EmployeeReportUI` sử dụng để lưu hoặc xóa báo cáo sau khi người dùng xác nhận.
+
+### c) Biểu đồ lớp
+![Biểu đồ lớp](https://www.planttext.com/api/plantuml/png/T5BBJiCm4BpxAto4GyGz1rIf1PG31HNuW2NP9XQ9RRoReWZnPHpu97u1Eo-eKtA8el7EpcGytvzVAs9mt3Qre1UbfJE48g-1I5urjZOTedmNqZ-9n178DgbKcaTKGuEfV62dT3b2rf1YPVGHB6M9FEtCzDwSdQVoO5GXFiIek4Dh7D-WHWTit2piUlonix5Gxtq3xF7mddpg8iA2ThyK1ubPUZWah37dTGMkn6tRFADRUfkS3mkUijdSGCPYzvz9fMtBQwSOdO8eaaAHhQ4Rk7SsX4QHETIUED6ZioFwqlErgl4MD9Juc-NUOzlbbGNu7hYA_14SJaVcbNDmnL9vaLEIN2ukjk-F_ywPv9lYIiG3WJJtB_K5U6sH_70132U7__vgsjkcYz4ZZVqHOkMR4Ph-0m00__y30000)
 
 # Phân tích ca sử dụng Maintain Employee Information 
 1. Mô tả ngắn gọn

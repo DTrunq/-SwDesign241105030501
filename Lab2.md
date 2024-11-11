@@ -1,93 +1,24 @@
-# Phân tích ca sử dụng Create Administrative Report
-1. Mô tả ngắn gọn
+# Phân tích ca sử dụng: Create Administrative Report
 
-Ca sử dụng Create Administrative Report cho phép Payroll Administrator tạo báo cáo quản trị dựa trên các tiêu chí về giờ làm việc hoặc tổng thu nhập năm cho nhân viên.
+## 1. Mô tả ngắn gọn
+Ca sử dụng **Create Administrative Report** cho phép **Payroll Administrator** tạo các báo cáo quản trị dựa trên các tiêu chí cụ thể như giờ làm việc hoặc tổng thu nhập năm của nhân viên.
 
-2. Xác định các lớp
+## 2. Xác định các lớp
 
-Boundary Classes:
-  - PaymentSelectionUI: giao diện cho người dùng chọn hình thức thanh toán.
-Control Classes:
-  - PaymentController: lớp điều khiển xử lý lựa chọn hình thức thanh toán.
-Entity Classes:
-  - PaymentMethod: lớp chứa các phương thức thanh toán.
-  - Employee: thực thể chứa thông tin về nhân viên (để liên kết thanh toán với nhân viên cụ thể).
-  - Payment: thực thể chứa thông tin thanh toán cụ thể (tiền lương, hình thức thanh toán).
+### Boundary Classes (Lớp giao diện):
+- **PaymentSelectionUI**: Giao diện cho phép người dùng chọn hình thức thanh toán và cung cấp các tiêu chí báo cáo.
 
-3. Biểu đồ tuần tự
-![Sequence Diagram](https://www.planttext.com/api/plantuml/png/T9DDJeH048NtVOfQQZ9Um8MP2IPcDeP0vW0jNMh7fXkh2mndS-6Hl8B5xxGuie3GttklVWZVdr_xo9guhPsARzO3XOXALnm8SjrJSEvWQkjjPDB3eOwG7zHJQBtHr4E1JI0kyBt5oAVZW4z7LGNFOfrfDhqv7Dr5fj2pvSLR8dMsmX6Llz5ufbH-W9ixYOLRc0i11wW8DIFGg5H2HIFAisOYehECP3LSST_W3eouuWwmRbpe4UDrcfzJwAp1hNUEBpAHbEZD7ovauANm1_H8IMToE20XMTenV5X-XMQgPvAaDQX0Rid3ovndDe7PMRA0R9tZtiR6wNuXIZk6KdThKo3NvRN6ZUh2OhskvNF95boeDDlWjt7B5YyBjxjCAifZB37gafqchOyzDbZPPuj9i0HDKyhabIRppw2Fwu3dEaa_6_CGkfVRy7Fy0000__y30000)
+### Control Classes (Lớp điều khiển):
+- **PaymentController**: Lớp điều khiển xử lý logic khi người dùng chọn các hình thức thanh toán và khởi tạo báo cáo.
 
-4. Các hành vi cảu từng lớp
+### Entity Classes (Lớp thực thể):
+- **PaymentMethod**: Quản lý các phương thức thanh toán.
+- **Employee**: Quản lý thông tin về nhân viên, liên kết thông tin thanh toán với từng nhân viên cụ thể.
+- **Payment**: Chứa thông tin chi tiết về thanh toán như tiền lương và hình thức thanh toán.
 
-PayrollAdministrator (PA)
-  - Request to create report: PA yêu cầu hệ thống tạo một báo cáo.
-  - Provide report criteria: Cung cấp các thông tin cần thiết để tạo báo cáo, bao gồm loại báo cáo, ngày bắt đầu, ngày kết thúc, và tên nhân viên.
-  - Request to save report (nếu có): Nếu chọn lưu báo cáo, PA yêu cầu hệ thống lưu báo cáo, đồng thời cung cấp tên và vị trí để lưu.
-  - No save request (nếu không lưu): PA không thực hiện yêu cầu lưu báo cáo nếu quyết định không lưu.
-
-ReportRequestUI (UI)
-  - Request report criteria: Hiển thị biểu mẫu và yêu cầu PA cung cấp các tiêu chí cần thiết để tạo báo cáo.
-  - Send report criteria: Gửi các tiêu chí báo cáo đã nhận được từ PA tới ReportController để xử lý việc tạo báo cáo.
-  - Display report: Hiển thị báo cáo đã được tạo cho PA xem.
-  - Request name and location (khi lưu báo cáo): Yêu cầu PA cung cấp tên và vị trí lưu báo cáo nếu PA chọn lưu.
-  - Send save report request: Gửi yêu cầu lưu báo cáo tới ReportController với tên và vị trí mà PA đã cung cấp.
-  - Discard report: Nếu PA không chọn lưu báo cáo, UI gửi lệnh hủy báo cáo tới ReportController.
-
-ReportController (RC)
-  - Send report criteria to ReportService: Nhận tiêu chí từ UI và gửi tới ReportService để bắt đầu quá trình tạo báo cáo.
-  - Return report to UI: Sau khi báo cáo được tạo, nhận báo cáo từ ReportService và gửi lại cho UI để hiển thị cho PA.
-  - Save report to ReportService: Khi nhận được yêu cầu lưu báo cáo từ UI, ReportController gửi yêu cầu này tới ReportService để thực hiện lưu báo cáo.
-  - Discard report: Nếu không có yêu cầu lưu báo cáo, ReportController thực hiện việc hủy bỏ báo cáo theo yêu cầu từ UI.
-
-ReportService (RS)
-  - Generate report: Nhận tiêu chí từ ReportController và thực hiện việc tạo báo cáo, gửi yêu cầu tạo báo cáo tới lớp Report (entity).
-  -Save report: Nhận yêu cầu lưu báo cáo từ ReportController và lưu báo cáo vào vị trí và tên được chỉ định bởi PA.
-Report (R)
-  - Create report: Nhận thông tin từ ReportService và tạo báo cáo theo các tiêu chí đã cung cấp (loại báo cáo, ngày tháng, danh sách nhân viên).
-  - Return generated report: Trả báo cáo đã tạo lại cho ReportService.
-
-5. Biểu đồ lớp
-
-a) Các lớp phân tích và nhiệm vụ của từng lớp
-
-AdminReportUI:
-  - Nhiệm vụ: Đây là lớp giao diện, tương tác trực tiếp với người dùng để yêu cầu nhập tiêu chí báo cáo và khởi tạo yêu cầu tạo báo cáo từ AdminReportController. Lớp này cũng cho phép người dùng lưu báo cáo.
-  - Phương thức:
-    + generateReport(): Yêu cầu tạo báo cáo từ AdminReportController.
-    + saveReport(location: String): Lưu báo cáo vào vị trí do người dùng chỉ định.
-
-AdminReportController:
-  - Nhiệm vụ: Đây là lớp điều khiển, chịu trách nhiệm quản lý quá trình tạo báo cáo, yêu cầu và lấy dữ liệu từ các lớp liên quan (như Employee và Project). Nó cũng xử lý logic lưu báo cáo.
-  - Phương thức:
-      + requestReport(criteria: ReportCriteria): Nhận yêu cầu từ AdminReportUI và tạo báo cáo dựa trên tiêu chí từ ReportCriteria.
-      + saveReport(report: Report, location: String): Lưu báo cáo được tạo vào vị trí chỉ định.
-
-Report:
-  - Nhiệm vụ: Lớp này đại diện cho báo cáo thực tế, bao gồm các loại báo cáo khác nhau (như giờ làm, nghỉ phép, lương, v.v.) cùng các phương thức để tạo và lấy dữ liệu báo cáo.
-  - Phương thức:
-    + generate(): Tạo báo cáo dựa trên dữ liệu có sẵn và tiêu chí nhận được từ ReportCriteria.
-    + getData(): Trả về dữ liệu báo cáo để hiển thị hoặc lưu.
-
-ReportCriteria:
-  - Nhiệm vụ: Lớp này lưu trữ tiêu chí báo cáo, chẳng hạn như loại báo cáo, ngày bắt đầu và kết thúc. Nó giúp AdminReportController có thể xác định rõ ràng thông tin cần để tạo báo cáo.
-  - Thuộc tính: reportType, startDate, endDate.
-
-Project:
-  - Nhiệm vụ: Lớp này đại diện cho một dự án, bao gồm các thuộc tính liên quan đến mã số dự án và cung cấp danh sách các số mã (charge numbers) liên quan đến dự án để báo cáo về dự án.
-  - Phương thức:
-    + getChargeNumbers(): Cung cấp danh sách mã chi phí liên quan đến dự án nếu báo cáo yêu cầu dữ liệu về dự án.
-
-Employee:
-  - Nhiệm vụ: Đại diện cho nhân viên, bao gồm thông tin về thời gian làm việc, ngày nghỉ phép, tiền lương, và phương thức để tạo báo cáo dựa trên yêu cầu của AdminReportController.
-  - Phương thức:
-    + generateReport(reportType: String, startDate: Date, endDate: Date): Tạo báo cáo cho nhân viên dựa trên loại báo cáo và khoảng thời gian.
-   
-b) Quan hệ giữa các lớp
-  - AdminReportUI — AdminReportController: AdminReportUI là giao diện người dùng sẽ gửi yêu cầu tạo báo cáo đến AdminReportController.
-  - AdminReportController — Report: AdminReportController quản lý quá trình tạo báo cáo bằng cách lấy và cung cấp dữ liệu từ các lớp khác (như Employee và Project) dựa trên tiêu chí của ReportCriteria.
-  - ReportCriteria — Report: ReportCriteria chứa thông tin về loại báo cáo và khoảng thời gian, được sử dụng trong lớp Report để tạo báo cáo chính xác.
-  - AdminReportController — Project và Employee: AdminReportController truy vấn dữ liệu từ Project và Employee dựa trên loại báo cáo yêu cầu để tổng hợp thông tin cho báo cáo.
-
+## 3. Biểu đồ tuần tự
+Biểu đồ tuần tự minh họa luồng tương tác giữa các lớp khi Payroll Administrator yêu cầu tạo và lưu báo cáo quản trị.
+![](https://www.planttext.com/api/plantuml/png/Z9HDRi8m48NtFiM85KZq0YmgeY1LxA947C2D1x3asAbja7AsBdgaNg7-YObfWsWMLZJppPkPvoZVdrzROwcsbquGsbgbeQA3La8KhEEI6wkf3r83LK5w1_AMzrHQMDJOAsrh_BYWiOVzmZE7_HnJAccz9Ee0rUKSrA2-yXOZqSmHCKL8LS3BgskrWR4vM0MjHceHT239OU-HgfYGc70OjwWvXQKTUbm32qLKdjmxThrG0-8gwr1fTUKCVvUF3Ufo0mrAzYTTbo7TpAVXw1mTOoUKw2pcIfAw2KKRU8knMzTtQf21afb-ag_HNhHCAfXQ9QtoHgHuENcNnSD4Z9jUq24pRnSZgPXGOLqSshDI1esttT0hWZtVZ0VtpDvF0CTcIqaxvxTGRLXy5Qf-EPhpEie4B7CsLqnQQ_3QKN7q8A7Jb66U7bj-vCwnL9hNk2dSHtlakWifKCTKwkTYsIH-pQVevEY8tYCe37hNt0MqL3FpsD1T9FBavDjzye5hCmfFTnxd-k_Uz_Z3tIVCtJVPkiF_Wtu0003__mC0)
 c) Biểu đồ lớp phân tích
 ![](https://www.planttext.com/api/plantuml/png/h5HBJiCm4Dtd55usgBr0XAgY5aIbgggW2B4SaY6O9dOOEvKYnCbOS2IkW5t7WJYqAx98DCypRtxF-Vhud2aDfEkoYDIE2qPIOPGMe1Ixo4ekRh2IfE-Mx2rYzibH8856XuzYXohOUwIGAMWkHS9kDN6Hnz5xD2ISIw595WMI9oPyhL7fbYKbhf4u9AprR-rXFZfylD-OdSZlN7uIMclRLEXTMsuxZuLfCM7sxK0KMGXbe4rvAwxqkGkVzYVaPvEZPOFHe13VqpyKr35lIBvWslLOENEPzHbRU0rbaChKEdy6od5Tbuz8QXG77NQ9Bikga0sYpuIj7QRIKaDnBMjIzv9sQ4wl2WdQ7Ux1xMe1ZKhOKhImukbkXMR50NxWsa3pW41RwTh_nHP8SpZESJZASN-CiLUHRREl_ibaUaI-YLUkYlvsiA6jyX9MWe0SJxdw3LfUKpNkKHsaTYAasyKW9X1QhnH_nTYJfD3nR38vscwjJFtHp4pE_ZI-0G00__y30000)
 # Phân tích ca sử dụng Create Employee Report. 
